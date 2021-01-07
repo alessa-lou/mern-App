@@ -22,7 +22,8 @@ class MessageApp {
             date: new Date()
         }
         this.messages.push(item)
-        console.log(this.messages)
+        this.writeToJSON()
+        // console.log(this.messages)
         return this.messages
     }
 
@@ -33,11 +34,13 @@ class MessageApp {
     update(id, update) {
         let index = this.messages.findIndex(message => message.id === id)
         this.messages[index].content = update
+        this.writeToJSON()
         return this.messages[id]
     }
 
     delete(id) {
         this.messages = this.messages.filter(message => message.id != id)
+        this.writeToJSON()
         return this.messages
     }
 
@@ -47,6 +50,15 @@ class MessageApp {
                 if (err) throw err
             })
         )
+    }
+
+    writeToJSON() {
+        if (this.filepath) {
+            const jsonItem = JSON.stringify(this.messages)
+            fs.writeFileSync(__dirname+(this.filepath), jsonItem, (err) => {
+                if (err) throw err;
+            });
+        }
     }
 
 }
