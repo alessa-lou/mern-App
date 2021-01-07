@@ -16,32 +16,50 @@ class MessageApp {
     }
 
     post(content) {
-        let item = {
-            id: this._newId(this.messages),
-            content: content,
-            date: new Date()
+        if (content){
+            this.messages.push({
+                id: this._newId(this.messages),
+                content: content,
+                date: new Date()
+            })
+            this.writeToJSON()
+            return this.messages
         }
-        this.messages.push(item)
-        this.writeToJSON()
-        // console.log(this.messages)
-        return this.messages
+        else if (!content) {
+            return []
+        }
     }
 
     get(id) {
         return this.messages.filter(message => message.id === id)[0];
     }
 
+    getAll(){
+        return this.messages
+    }
+
     update(id, update) {
         let index = this.messages.findIndex(message => message.id === id)
-        this.messages[index].content = update
-        this.writeToJSON()
-        return this.messages[id]
+        if (index >= 0){
+            this.messages[index].content = update
+            this.writeToJSON()
+            return this.messages[id]
+        }
+        else {
+            return []
+        }
     }
 
     delete(id) {
-        this.messages = this.messages.filter(message => message.id != id)
-        this.writeToJSON()
-        return this.messages
+        let index = this.messages.findIndex(message=> message.id === id)
+        if (index >=0) {
+            this.messages.splice(index, 1);
+            this.writeToJSON()
+            return this.messages
+        }
+        else {
+            return "Message not found in database"
+        }
     }
 
     readFromJson() {
