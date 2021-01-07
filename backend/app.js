@@ -1,6 +1,10 @@
+import fs from 'fs'
+
+
 class MessageApp {
-    constructor() {
-        this.messages = []
+    constructor(filepath) {
+        this.filepath = filepath
+        this.messages = filepath ? this.readFromJson() : []
     }
 
     _newId(array) {
@@ -35,6 +39,14 @@ class MessageApp {
     delete(id) {
         this.messages = this.messages.filter(message => message.id != id)
         return this.messages
+    }
+
+    readFromJson() {
+        return JSON.parse(fs.readFileSync(
+            __dirname+this.filepath, "utf8",(err,data)=>{
+                if (err) throw err
+            })
+        )
     }
 
 }
